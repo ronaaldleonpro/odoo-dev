@@ -5,8 +5,8 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=postgres
-      - POSTGRES_USER=openpg
-      - POSTGRES_PASSWORD=openpgpwd
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
     ports:
       - "5432:5432"
 
@@ -20,5 +20,5 @@ services:
       - ./addons:/mnt/extra-addons
     environment:
       - HOST=db
-      - USER=openpg
-      - PASSWORD=openpgpwd
+      - USER=odoo
+      - PASSWORD=odoo

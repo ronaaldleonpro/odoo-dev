@@ -1,79 +1,67 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-#scope_management -> scope_management
+
 import json
-
 from odoo import _, api, fields, models, modules
-
 
 class Users(models.Model):
     _inherit = 'res.users'
 
     @api.model
     def _get_activity_groups(self):
-        """ Split To-do and Project activities in systray by removing
-            the single scope.management activity represented and doing a
-            new query to split them between private/non-private tasks.
-        """
+        """ Obtener grupos de actividades para Scope Management en el systray """
         activity_groups = super()._get_activity_groups()
-        # 1. removing scope.management activity group
-        to_remove = next((g for g in activity_groups if g.get('model') == 'scope.management'), None)
-        if to_remove:
-            activity_groups.remove(to_remove)
-
-        # 2. creating groups for todo and task seperately
-        query = """SELECT BOOL(t.project_id) as is_task, count(*), act.res_model, act.res_id,
-                       CASE
-                           WHEN %(date)s - act.date_deadline::date = 0 THEN 'today'
-                           WHEN %(date)s - act.date_deadline::date > 0 THEN 'overdue'
-                           WHEN %(date)s - act.date_deadline::date < 0 THEN 'planned'
-                        END AS states
-                     FROM mail_activity AS act
-                     JOIN project_task AS t ON act.res_id = t.id
-                    WHERE act.res_model = 'scope.management' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
-                 GROUP BY is_task, states, act.res_model, act.res_id
-                """
+        
+        # Filtrar y obtener actividades específicas de scope management
+        query = """
+            SELECT count(*), act.res_model, act.res_id,
+                   CASE
+                       WHEN %(date)s - act.date_deadline::date = 0 THEN 'today'
+                       WHEN %(date)s - act.date_deadline::date > 0 THEN 'overdue'
+                       WHEN %(date)s - act.date_deadline::date < 0 THEN 'planned'
+                   END AS states
+             FROM mail_activity AS act
+            WHERE act.res_model = 'scope.management' 
+              AND act.user_id = %(user_id)s 
+              AND act.active in (TRUE, %(active)s)
+         GROUP BY states, act.res_model, act.res_id
+        """
+        
         self.env.cr.execute(query, {
             'date': str(fields.Date.context_today(self)),
             'user_id': self.env.uid,
             'active': self._context.get('active_test', True),
         })
+        
         activity_data = self.env.cr.dictfetchall()
-        #view_type = self.env['project.task']._systray_view
         view_type = getattr(self.env['scope.management'], '_systray_view', False)
 
+        # Crear grupo de actividades para Scope Management
+        scope_activities = {
+            'id': self.env['ir.model']._get('scope.management').id,
+            'name': _('Scope Management'),
+            'model': 'scope.management',
+            'type': 'activity',
+            'icon': '/scope_management/static/description/icon.png',  # Ajustar ruta del icono
+            'total_count': 0, 
+            'today_count': 0, 
+            'overdue_count': 0, 
+            'planned_count': 0,
+            'res_ids': set(),
+            'view_type': view_type,
+        }
 
-        user_activities = {}
+        # Procesar datos de actividades
         for activity in activity_data:
-            is_task = activity['is_task']
-            if is_task not in user_activities:
-                if not is_task:
-                    module = 'scope_management'
-                    name = _('Scope Management')
-                else:
-                    module = 'scope'
-                    name = _('Scope')
-                icon = modules.module.get_module_icon(module)
-                user_activities[is_task] = {
-                    'id': self.env['ir.model']._get('scope.management').id,
-                    'name': name,
-                    'is_todo': not is_task,
-                    'model': 'scope.management',
-                    'type': 'activity',
-                    'icon': icon,
-                    'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
-                    'res_ids': set(),
-                    'view_type': view_type,
-                }
-            user_activities[is_task]['res_ids'].add(activity['res_id'])
-            user_activities[is_task][f"{activity['states']}_count"] += activity['count']
+            scope_activities['res_ids'].add(activity['res_id'])
+            scope_activities[f"{activity['states']}_count"] += activity['count']
             if activity['states'] in ('today', 'overdue'):
-                user_activities[is_task]['total_count'] += activity['count']
+                scope_activities['total_count'] += activity['count']
 
-        for group in user_activities.values():
-            group.update({
-                'domain': json.dumps([['activity_ids.res_id', 'in', list(group['res_ids'])]])
+        # Agregar dominio de filtro
+        if scope_activities['res_ids']:
+            scope_activities.update({
+                'domain': json.dumps([['id', 'in', list(scope_activities['res_ids'])]])
             })
-        activity_groups.extend(list(user_activities.values()))
+            activity_groups.append(scope_activities)
 
         return activity_groups
