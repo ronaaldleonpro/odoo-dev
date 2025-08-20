@@ -52,52 +52,45 @@
         <field name="name">scope.management.form</field>
         <field name="model">scope.management</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Scopes">
                 <header>
                     <field name="state" widget="statusbar" clickable="true"/>
                 </header>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="priority" widget="priority"/>
-                            <field name="state"/>
-                        </group>
-                        <group>
-                            <field name="user_ids" widget="many2many_avatar_user"/>
-                            <field name="project_id"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="tag_ids" widget="many2many_tags"/>
-                    </group>
-                    <group>
-                        <field name="description"/>
-                    </group>
+                <sheet class="o_scope_form_sheet_bg">
+                    <div class="oe_title pe-0">
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex w-100">
+                                <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Module/Service..."/>
+                            </div>
+                        </h1>
+                        <field name="description" strong="Descripcion" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}" placeholder="No description provided..."/>
+                        <field string="Linea de negocio" name="categories"/>
+                        <field name="product_name" string="Product" widget="many2one" placeholder="Nombre del producto"/>
+                    </div>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Scope Management Search View -->
+    <!-- Scope Management Search View-->
     <record id="scope_management_view_search" model="ir.ui.view">
-    <field name="name">scope.management.search</field>
-    <field name="model">scope.management</field>
-    <field name="arch" type="xml">
-        <search>
-            <field name="name"/>
-            <field name="state"/>
-            <filter string="Active" name="filter_active" domain="[('state','=','active')]"/>
-        </search>
-    </field>
-</record>
+        <field name="name">scope.management.search</field>
+        <field name="model">scope.management</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <filter string="Active" name="filter_active" domain="[('state','=','active')]"/>
+            </search>
+        </field>
+    </record>
 
 
     <!-- Main Action -->
     <record id="action_scope_management" model="ir.actions.act_window">
         <field name="name">Scope Management</field>
         <field name="res_model">scope.management</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="search_view_id" ref="scope_management_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

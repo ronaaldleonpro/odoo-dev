@@ -1,18 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Menú raíz -->
+    <menuitem id="menu_scope_management_root" name="Scope Management" sequence="10"/>
 
-    <menuitem id="menu_scope_management"
-              name="Scope Management"
-              sequence="10"/>
-    <!-- Acción -->
-    <record id="action_scope_management" model="ir.actions.act_window">
-        <field name="active" eval="True"/>
-    </record>
-
-    <!-- Submenú que abre la acción -->
-    <menuitem id="submenu_scope_management"
-              name="Scopes"
-              parent="menu_scope_management"
-              action="action_scope_management"
-              sequence="10"/>
+    <!-- Menú hijo con acción -->
+    <menuitem id="menu_scope_management" name="Scope Items" parent="menu_scope_management_root" action="action_scope_management" />
 </odoo>

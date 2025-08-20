@@ -9,10 +9,27 @@ class ScopeManagement(models.Model):
 
     name = fields.Char(string='Scope Title', required=True)
     description = fields.Html(string='Description')
-
     color = fields.Integer(string="Color")
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(default=True)
+    priority = fields.Selection([
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High'),
+    ], string='Priority', default='1')
+
+    categories = fields.Selection([
+        ('0', 'Implementacion Odoo'),
+        ('1', 'Facturacion electronica'),
+        ('2', 'SLA'),
+        ('3', 'Outsourcing'),
+        ('4', 'Desarrollo'),
+        ('5', 'Reclutamiento'),
+    ], string="Linea de negocio", default='0')
+
+    product_name = fields.Many2one(
+        'product.template', string='Product'
+    )
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -20,12 +37,6 @@ class ScopeManagement(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     ], string="State", default='draft')
-
-    priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'Normal'),
-        ('2', 'High'),
-    ], string='Priority', default='1')
 
     user_ids = fields.Many2many(
         'res.users', string='Assigned Users',
@@ -39,19 +50,20 @@ class ScopeManagement(models.Model):
         column1='scope_id', column2='tag_id'
     )
 
-    project_id = fields.Many2one(
-        'project.project', string='Project'
-    )
+    #project_id = fields.Many2one(
+    #    'project.project', string='Project'
+    #)
 
     parent_id = fields.Many2one(
         'scope.management', string='Parent Scope', index=True
     )
 
-    company_id = fields.Many2one(
-        'res.company', string='Company',
-        default=lambda self: self.env.company,
-        required=True
-    )
+    #company_id = fields.Many2one(
+    #    'res.company', string='Company',
+    #    default=lambda self: self.env.company,
+    #    required=True
+    #)
+    
 
     is_closed = fields.Boolean(
         string='Closed',
