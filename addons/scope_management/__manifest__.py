@@ -10,6 +10,7 @@
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
+        'views/sales_team_inherit_views.xml',
         'views/scope_management_views.xml',
         'views/scope_management_menus.xml',
     ],

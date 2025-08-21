@@ -110,6 +110,11 @@
                 action="sales_team.crm_team_action_config"
                 sequence="20"/>
 
+            <menuitem id="menu_scope_management_config"
+                name="Scopes"
+                action="action_scope_management"
+                sequence="60"/>
+
             <menuitem id="menu_sales_config"
                 sequence="30"
                 name="Sales Orders">

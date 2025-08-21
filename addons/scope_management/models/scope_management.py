@@ -5,18 +5,10 @@ from odoo.tools import html2plaintext
 
 class ScopeManagement(models.Model):
     _name = 'scope.management'
-    _description = 'Scope Management'
+    _description = 'Scopes Management'
 
     name = fields.Char(string='Scope Title', required=True)
     description = fields.Html(string='Description')
-    color = fields.Integer(string="Color")
-    sequence = fields.Integer(string="Sequence")
-    active = fields.Boolean(default=True)
-    priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'Normal'),
-        ('2', 'High'),
-    ], string='Priority', default='1')
 
     sales_team = fields.Many2one(
         'crm.team', string='Sales Team'
@@ -32,47 +24,6 @@ class ScopeManagement(models.Model):
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     ], string="State", default='draft')
-
-    user_ids = fields.Many2many(
-        'res.users', string='Assigned Users',
-        relation='scope_management_user_rel',
-        column1='scope_id', column2='user_id',
-    )
-
-    tag_ids = fields.Many2many(
-        'scope.tags', string='Tags',
-        relation='scope_management_tags_rel',
-        column1='scope_id', column2='tag_id'
-    )
-
-    #project_id = fields.Many2one(
-    #    'project.project', string='Project'
-    #)
-
-    parent_id = fields.Many2one(
-        'scope.management', string='Parent Scope', index=True
-    )
-
-    #company_id = fields.Many2one(
-    #    'res.company', string='Company',
-    #    default=lambda self: self.env.company,
-    #    required=True
-    #)
-    
-
-    is_closed = fields.Boolean(
-        string='Closed',
-        compute='_compute_is_closed',
-        store=True
-    )
-
-    date_last_stage_update = fields.Datetime(string="Last Status Update")
-
-    # Campos computados
-    @api.depends('state')
-    def _compute_is_closed(self):
-        for record in self:
-            record.is_closed = record.state in ('completed', 'canceled')
 
     # Métodos de creación
     @api.model_create_multi

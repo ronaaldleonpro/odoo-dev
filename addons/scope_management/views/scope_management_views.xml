@@ -12,13 +12,13 @@
                     <t t-name="kanban-box">
                         <div t-att-class="{'opacity-50': record.state.value == 'completed' or record.state.value == 'canceled'}">
                             <div class="oe_kanban_content">
-                                <field name="name" class="oe_kanban_text_title"/>
-                                <div class="text-muted">
-                                    <field name="description" widget="html"/>
-                                </div>
-                                <div class="o_kanban_footer">
-                                    <field name="state" widget="statusbar" clickable="true"/>
-                                </div>
+                                Servicio: <field name="name" class="oe_kanban_text_title"/>
+                            </div>
+                            <div class="oe_kanban_content">
+                                Equipo de venta: <field name="sales_team" class="oe_kanban_text_title"/>
+                            </div>
+                            <div class="oe_kanban_content">
+                                Producto: <field name="product_name" class="oe_kanban_text_title"/>
                             </div>
                         </div>
                     </t>
@@ -29,10 +29,10 @@
     
     <!-- Scope Management List View -->
     <record id="scope_management_view_tree" model="ir.ui.view">
-        <field name="name">scope.management.list</field>  <!-- Cambiado a .tree -->
+        <field name="name">scope.management.list</field>
         <field name="model">scope.management</field>
         <field name="arch" type="xml">
-            <list>  <!-- Cambiado de <list> a <tree> -->
+            <list>
                 <field name="name"/>
                 <field name="sales_team"/>
                 <field name="product_name"/>
@@ -62,9 +62,11 @@
                         <field name="product_name" string="Producto" placeholder="Digita para buscar un producto"/>
                     </group>
                 </group>
-                    <group string="Descripción de alcances">
-                    </group>
-                    <field name="description" string="Alcances" nolabel="0" placeholder="Alcances..." class="oe_description"/>
+                <notebook>
+                    <page string="Alcances">
+                        <field name="description" class="oe_description"/>
+                    </page>
+                </notebook>
             </sheet>
         </form>
     </field>
@@ -89,7 +91,7 @@
         <field name="name">Scope Management</field>
         <field name="res_model">scope.management</field>
         <field name="view_mode">kanban,list,form</field>
-        <field name="search_view_id" ref="scope_management_view_search"/>
+        <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No scope items found. Let's create one!
@@ -97,7 +99,7 @@
         </field>
     </record>
 
-    <!-- View associations for the main action CORREGIDAS -->
+    <!-- View associations for the main action -->
     <record model="ir.actions.act_window.view" id="action_scope_management_kanban_view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">kanban</field>
@@ -107,7 +109,7 @@
 
     <record model="ir.actions.act_window.view" id="action_scope_management_tree_view">
         <field name="sequence" eval="2"/>
-        <field name="view_mode">list</field>  <!-- CORREGIDO: de "list" a "tree" -->
+        <field name="view_mode">list</field>
         <field name="view_id" ref="scope_management_view_tree"/>
         <field name="act_window_id" ref="action_scope_management"/>
     </record>

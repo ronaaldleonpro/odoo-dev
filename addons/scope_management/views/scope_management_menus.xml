@@ -1,7 +1,3 @@
 <odoo>
-    <!-- Menú raíz -->
-    <menuitem id="menu_scope_management_root" name="Scopes" sequence="10"/>
-
-    <!-- Menú hijo con acción -->
-    <menuitem id="menu_scope_management" name="Scope Items" parent="menu_scope_management_root" action="action_scope_management" />
+    <menuitem id="menu_scope_management" name="Scopes" parent="sale.menu_sale_config" action="action_scope_management" />
 </odoo>
