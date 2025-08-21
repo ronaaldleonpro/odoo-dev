@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Productivity/Scopes',
     'summary': 'Organize your quotazion with scopes',
-    'depends': ['base', 'product', 'stock'],
+    'depends': ['base', 'sale', 'stock', 'crm', 'product', 'web', 'mail', 'sale_management',],
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',

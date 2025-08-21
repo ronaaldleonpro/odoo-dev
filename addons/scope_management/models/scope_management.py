@@ -18,14 +18,9 @@ class ScopeManagement(models.Model):
         ('2', 'High'),
     ], string='Priority', default='1')
 
-    categories = fields.Selection([
-        ('0', 'Implementacion Odoo'),
-        ('1', 'Facturacion electronica'),
-        ('2', 'SLA'),
-        ('3', 'Outsourcing'),
-        ('4', 'Desarrollo'),
-        ('5', 'Reclutamiento'),
-    ], string="Linea de negocio", default='0')
+    sales_team = fields.Many2one(
+        'crm.team', string='Sales Team'
+    )
 
     product_name = fields.Many2one(
         'product.template', string='Product'

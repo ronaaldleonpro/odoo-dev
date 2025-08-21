@@ -5,23 +5,18 @@
     <record id="scope_management_view_kanban" model="ir.ui.view">
         <field name="name">scope.management.kanban</field>
         <field name="model">scope.management</field>
-        <field name="priority">10</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_small_column">
-                <field name="color"/>
-                <field name="sequence"/>
                 <field name="state"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-att-class="{'opacity-50': record.is_closed.value}">
+                        <div t-att-class="{'opacity-50': record.state.value == 'completed' or record.state.value == 'canceled'}">
                             <div class="oe_kanban_content">
                                 <field name="name" class="oe_kanban_text_title"/>
-                                <field name="description" widget="html" class="oe_kanban_text"/>
-                                <div class="o_kanban_tags">
-                                    <field name="tag_ids" widget="many2many_tags"/>
+                                <div class="text-muted">
+                                    <field name="description" widget="html"/>
                                 </div>
                                 <div class="o_kanban_footer">
-                                    <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True}"/>
                                     <field name="state" widget="statusbar" clickable="true"/>
                                 </div>
                             </div>
@@ -31,46 +26,49 @@
             </kanban>
         </field>
     </record>
-
+    
     <!-- Scope Management List View -->
     <record id="scope_management_view_tree" model="ir.ui.view">
-        <field name="name">scope.management.list</field>
+        <field name="name">scope.management.list</field>  <!-- Cambiado a .tree -->
         <field name="model">scope.management</field>
         <field name="arch" type="xml">
-            <list>
+            <list>  <!-- Cambiado de <list> a <tree> -->
                 <field name="name"/>
+                <field name="sales_team"/>
+                <field name="product_name"/>
                 <field name="state"/>
-                <field name="priority" widget="priority"/>
-                <field name="user_ids" widget="many2many_avatar_user"/>
-                <field name="tag_ids" widget="many2many_tags"/>
             </list>
         </field>
     </record>
 
     <!-- Scope Management Form view -->
     <record id="scope_management_view_form" model="ir.ui.view">
-        <field name="name">scope.management.form</field>
-        <field name="model">scope.management</field>
-        <field name="arch" type="xml">
-            <form string="Scopes">
-                <header>
-                    <field name="state" widget="statusbar" clickable="true"/>
-                </header>
-                <sheet class="o_scope_form_sheet_bg">
-                    <div class="oe_title pe-0">
-                        <h1 class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex w-100">
-                                <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Module/Service..."/>
-                            </div>
-                        </h1>
-                        <field name="description" strong="Descripcion" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}" placeholder="No description provided..."/>
-                        <field string="Linea de negocio" name="categories"/>
-                        <field name="product_name" string="Product" widget="many2one" placeholder="Nombre del producto"/>
-                    </div>
-                </sheet>
-            </form>
-        </field>
-    </record>
+    <field name="name">scope.management.form</field>
+    <field name="model">scope.management</field>
+    <field name="arch" type="xml">
+        <form string="Scopes">
+            <header>
+                <field name="state" widget="statusbar" clickable="true"/>
+            </header>
+            <sheet class="o_scope_form_sheet_bg">
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" string="Module/Service" placeholder="Module/Service..." class="o_field_name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group string="Información Principal">
+                        <field name="sales_team" string="Línea de negocio" placeholder="Digita para buscar una linea de negocio"/>
+                        <field name="product_name" string="Producto" placeholder="Digita para buscar un producto"/>
+                    </group>
+                </group>
+                    <group string="Descripción de alcances">
+                    </group>
+                    <field name="description" string="Alcances" nolabel="0" placeholder="Alcances..." class="oe_description"/>
+            </sheet>
+        </form>
+    </field>
+</record>
 
     <!-- Scope Management Search View-->
     <record id="scope_management_view_search" model="ir.ui.view">
@@ -79,18 +77,18 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <field name="state"/>
-                <filter string="Active" name="filter_active" domain="[('state','=','active')]"/>
+                <field name="sales_team"/>
+                <field name="product_name"/>
+                <field name="description"/>
             </search>
         </field>
     </record>
-
 
     <!-- Main Action -->
     <record id="action_scope_management" model="ir.actions.act_window">
         <field name="name">Scope Management</field>
         <field name="res_model">scope.management</field>
-        <field name="view_mode">list,form,kanban</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="scope_management_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -99,22 +97,25 @@
         </field>
     </record>
 
-    <!-- View associations for the main action -->
+    <!-- View associations for the main action CORREGIDAS -->
     <record model="ir.actions.act_window.view" id="action_scope_management_kanban_view">
+        <field name="sequence" eval="1"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="scope_management_view_kanban"/>
         <field name="act_window_id" ref="action_scope_management"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_scope_management_form_view">
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="scope_management_view_form"/>
+    <record model="ir.actions.act_window.view" id="action_scope_management_tree_view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">list</field>  <!-- CORREGIDO: de "list" a "tree" -->
+        <field name="view_id" ref="scope_management_view_tree"/>
         <field name="act_window_id" ref="action_scope_management"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_scope_management_tree_view">
-        <field name="view_mode">list</field>
-        <field name="view_id" ref="scope_management_view_tree"/>
+    <record model="ir.actions.act_window.view" id="action_scope_management_form_view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="scope_management_view_form"/>
         <field name="act_window_id" ref="action_scope_management"/>
     </record>
 
