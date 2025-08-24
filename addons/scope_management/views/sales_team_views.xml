@@ -4,11 +4,8 @@
         <field name="model">crm.team</field>
         <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
         <field name="arch" type="xml">
-            <!-- Insertamos un grupo nuevo al final del sheet -->
-            <xpath expr="//sheet" position="inside">
-                <group string="Scopes">
-                    <field name="x_scope_enabled" string="Enable Scope"/>
-                </group>
+            <xpath expr="//group[@name='left']" position="inside">
+                <field name="x_include_technical_proposal" widget="boolean_toggle" string="Include Technical Proposal"/>
             </xpath>
         </field>
     </record>

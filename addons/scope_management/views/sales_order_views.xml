@@ -1,0 +1,23 @@
+<odoo>
+    <record id="view_order_form_inherit_scope_proposal" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.scope.proposal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Ubicar pestaña Quote Builder -->
+            <xpath expr="//page[@name='pdf_quote_builder']" position="inside">
+                <group>
+                    <field name="team_include_technical_proposal" invisible="1"/>
+                    <field name="has_related_scopes" invisible="1"/>
+                    <group string="Technical Proposal (Scopes)">
+                        <label for="related_scope_ids"/>
+                        <field name="related_scope_ids" readonly="1" widget="many2many_tags"/>
+                        <button name="action_print_technical_proposal" type="object" string="Generate Scope PDF" class="oe_highlight mt-2"/>
+                    </group>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,57 @@
+<odoo>
+
+    <template id="report_saleorder_proposal_unified">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="scope_management.report_saleorder_proposal_unified_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+    <template id="report_saleorder_proposal_unified_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc"/>
+
+            <div class="page">
+                <h2>Propuesta técnica de alcances #<span t-field="doc.name"/>
+                </h2>
+
+                <t t-foreach="doc.order_line" t-as="line">
+                    <h3>Producto: <t t-esc="line.product_id.display_name"/>
+                    </h3>
+
+                    <t t-if="line.product_id.scope_id and line.product_id.scope_id.description">
+                        <div>
+                            <strong>Servicio:</strong>
+                            <t t-esc="line.product_id.scope_id.name"/>
+                            <p>
+                                <t t-raw="line.product_id.scope_id.description"/>
+                            </p>
+                        </div>
+                    </t>
+                    <t t-elif="line.product_id.scope_id">
+                        <div>
+                            <strong>Servicio:</strong>
+                            <t t-esc="line.product_id.scope_id.name"/>
+                            <p>No description available for this scope.</p>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <p>No hay alcances relacionados a este producto.</p>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+
+
+    <record id="scope_pdf_report" model="ir.actions.report">
+        <field name="name">Scope PDF</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">scope_management.report_saleorder_proposal_unified</field>
+        <field name="report_file">scope_management.report_saleorder_proposal_unified</field>
+        <field name="print_report_name">'Propuesta de Alcances - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="scope_management.paperformat_scope_pdf"/>
+    </record>
+</odoo>

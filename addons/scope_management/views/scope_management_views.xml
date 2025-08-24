@@ -18,7 +18,7 @@
                                 Equipo de venta: <field name="sales_team" class="oe_kanban_text_title"/>
                             </div>
                             <div class="oe_kanban_content">
-                                Producto: <field name="product_name" class="oe_kanban_text_title"/>
+                                Producto: <field name="product_id" class="oe_kanban_text_title"/>
                             </div>
                         </div>
                     </t>
@@ -26,7 +26,7 @@
             </kanban>
         </field>
     </record>
-    
+
     <!-- Scope Management List View -->
     <record id="scope_management_view_tree" model="ir.ui.view">
         <field name="name">scope.management.list</field>
@@ -35,42 +35,42 @@
             <list>
                 <field name="name"/>
                 <field name="sales_team"/>
-                <field name="product_name"/>
-                <field name="state"/>
+                <field name="product_id"/>
+                <!-- <field name="state"/> -->
             </list>
         </field>
     </record>
 
     <!-- Scope Management Form view -->
     <record id="scope_management_view_form" model="ir.ui.view">
-    <field name="name">scope.management.form</field>
-    <field name="model">scope.management</field>
-    <field name="arch" type="xml">
-        <form string="Scopes">
-            <header>
+        <field name="name">scope.management.form</field>
+        <field name="model">scope.management</field>
+        <field name="arch" type="xml">
+            <form string="Scopes">
+                <!-- <header>
                 <field name="state" widget="statusbar" clickable="true"/>
-            </header>
-            <sheet class="o_scope_form_sheet_bg">
-                <div class="oe_title">
-                    <h1>
-                        <field name="name" string="Module/Service" placeholder="Module/Service..." class="o_field_name"/>
-                    </h1>
-                </div>
-                <group>
-                    <group string="Información Principal">
-                        <field name="sales_team" string="Línea de negocio" placeholder="Digita para buscar una linea de negocio"/>
-                        <field name="product_name" string="Producto" placeholder="Digita para buscar un producto"/>
+            </header> -->
+                <sheet class="o_scope_form_sheet_bg">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" string="Module/Service" placeholder="Module/Service..." class="o_field_name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Información Principal">
+                            <field name="sales_team" string="Línea de negocio" placeholder="Digita para buscar una linea de negocio"/>
+                            <field name="product_id" string="Producto" placeholder="Digita para buscar un producto"/>
+                        </group>
                     </group>
-                </group>
-                <notebook>
-                    <page string="Alcances">
-                        <field name="description" class="oe_description"/>
-                    </page>
-                </notebook>
-            </sheet>
-        </form>
-    </field>
-</record>
+                    <notebook>
+                        <page string="Alcances">
+                            <field name="description" class="oe_description" placeholder="Alcance 1..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
     <!-- Scope Management Search View-->
     <record id="scope_management_view_search" model="ir.ui.view">
@@ -80,7 +80,7 @@
             <search>
                 <field name="name"/>
                 <field name="sales_team"/>
-                <field name="product_name"/>
+                <field name="product_id"/>
                 <field name="description"/>
             </search>
         </field>
@@ -97,6 +97,15 @@
                 No scope items found. Let's create one!
             </p>
         </field>
+    </record>
+
+    <record id="action_report_scope_proposal" model="ir.actions.report">
+        <field name="name">Scope Proposal</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">scope_management.report_saleorder_proposal_unified</field>
+        <field name="report_file">scope_management.report_saleorder_proposal_unified</field>
+        <field name="print_report_name">'Scope - %s' % (object.name)</field>
     </record>
 
     <!-- View associations for the main action -->

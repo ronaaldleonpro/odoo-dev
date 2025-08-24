@@ -1,11 +1,10 @@
-# models/sales_team_inherit.py
 from odoo import models, fields
 
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
-    x_scope_enabled = fields.Boolean(
-        string="Enable Scopes",
+    x_include_technical_proposal = fields.Boolean(
+        string="Include Technical Proposal",
         default=False,
-        help="Indicates if this sales team uses the Scopes module"
+        help="If enabled, quotations for this team can include a Technical Proposal PDF built from product Scopes."
     )
