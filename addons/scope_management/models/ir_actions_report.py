@@ -10,7 +10,12 @@ class IrActionsReport(models.Model):
 
         orders = self.env["sale.order"].browse(res_ids)
         for order in orders:
-            if not order.scope_ids:
+            # Check if the sales team has the "include technical proposal" boolean set to True
+            if not order.team_include_technical_proposal:
+                continue
+                
+            # Check if there are related scopes for this order
+            if not order.related_scope_ids:
                 continue
 
             initial_stream = result[order.id]["stream"]
@@ -19,7 +24,7 @@ class IrActionsReport(models.Model):
 
             writer = self._init_writer(initial_stream)
             # Renderizar scopes en PDF usando tu plantilla QWeb
-            scope_pdf, _ = self.env.ref("scope_management.scope_pdf_report")._render_qweb_pdf(order.scope_ids.ids)
+            scope_pdf, _ = self.env.ref("scope_management.scope_pdf_report")._render_qweb_pdf(order.related_scope_ids.ids)
             self._add_pages_to_writer(writer, scope_pdf)
 
             # Guardar el resultado en el stream final
@@ -38,3 +43,11 @@ class IrActionsReport(models.Model):
         for page in reader.pages:
             writer.addPage(page)
         return writer
+        
+    def _add_pages_to_writer(self, writer, document, prefix=None):
+        """Add pages from document to the writer"""
+        from odoo.tools.pdf import PdfFileReader
+        import io
+        reader = PdfFileReader(io.BytesIO(document), strict=False)
+        for page in reader.pages:
+            writer.addPage(page)

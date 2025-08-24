@@ -27,10 +27,13 @@ class SaleOrder(models.Model):
     scope_ids = fields.One2many("scope.management", "sale_order_id", string="Scopes")
 
     # --- Computa los scopes a partir de las líneas del pedido ---
-    @api.depends('order_line.product_id.scope_id')
+    @api.depends('order_line.product_id')
     def _compute_related_scope_ids(self):
         for order in self:
-            scopes = order.order_line.mapped('product_id.scope_id')
+            # Get product IDs from order lines
+            product_ids = order.order_line.mapped('product_id').ids
+            # Search for scopes that have these products
+            scopes = self.env['scope.management'].search([('product_id', 'in', product_ids)])
             order.related_scope_ids = scopes
 
     @api.depends('related_scope_ids')
@@ -51,5 +54,8 @@ class SaleOrderLine(models.Model):
     def _onchange_product_scope(self):
         """Cuando selecciono un producto, refresca los scopes en la orden"""
         if self.order_id:
-            scopes = self.order_id.order_line.mapped('product_id.scope_id')
+            # Get product IDs from order lines
+            product_ids = self.order_id.order_line.mapped('product_id').ids
+            # Search for scopes that have these products
+            scopes = self.env['scope.management'].search([('product_id', 'in', product_ids)])
             self.order_id.related_scope_ids = [(6, 0, scopes.ids)]

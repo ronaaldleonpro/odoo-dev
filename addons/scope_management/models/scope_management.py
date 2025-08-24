@@ -19,7 +19,6 @@ class ScopeManagement(models.Model):
     active = fields.Boolean(default=True)
 
     sale_order_id = fields.Many2one("sale.order", string="Sale Order", ondelete="cascade")
-    description = fields.Html(string="Description")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,21 +41,6 @@ class ScopeManagement(models.Model):
     def action_reopen(self):
         self.write({'state': 'draft'})
 
-class IrActionsReport(models.Model):
-    _inherit = 'ir.actions.report'
-
-    def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
-        if report_ref in ('sale.report_saleorder', 'sale.report_saleorder_pro_forma'):
-            for order_id in streams:
-                order = self.env['sale.order'].browse(order_id)
-                if order.team_include_technical_proposal:
-                    for line in order.order_line:
-                        if line.include_technical_proposal and line.product_id.scope_id:
-                            scope_report = self.env.ref('scope_management.action_report_scope_proposal')
-                            line_pdf, _ = scope_report._render_qweb_pdf(line.id)
-                            streams[order_id]['stream'].write(line_pdf)
-        return streams
     
 class ProductProduct(models.Model):
     _inherit = 'product.product'
