@@ -23,8 +23,19 @@ class SaleOrder(models.Model):
         compute="_compute_has_related_scopes",
         store=True
     )
+    related_scope_products = fields.Char(
+        string="Products with Scopes",
+        compute="_compute_related_scope_products",
+        store=True
+    )
 
     scope_ids = fields.One2many("scope.management", "sale_order_id", string="Scopes")
+
+    @api.depends('related_scope_ids.product_id')
+    def _compute_related_scope_products(self):
+        for order in self:
+            product_names = order.related_scope_ids.mapped('product_id.name')
+            order.related_scope_products = ", ".join(product_names) if product_names else "No products"
 
     # --- Computa los scopes a partir de las líneas del pedido ---
     @api.depends('order_line.product_id')
