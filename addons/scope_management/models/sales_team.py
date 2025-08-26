@@ -8,3 +8,10 @@ class CrmTeam(models.Model):
         default=False,
         help="If enabled, quotations for this team can include a Technical Proposal PDF built from product Scopes."
     )
+
+    quotation_document_ids = fields.Many2many(
+        'quotation.document',
+        'crm_team_quotation_document_rel',  # nombre de la tabla intermedia
+        'crm_team_id',                      # FK hacia crm.team
+        'quotation_document_id',            # FK hacia quotation.document
+    )

@@ -7,6 +7,46 @@
             <xpath expr="//group[@name='left']" position="inside">
                 <field name="x_include_technical_proposal" widget="boolean_toggle" string="Include Technical Proposal"/>
             </xpath>
+
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Quote Builder" name="quote_builder_settings">
+                    <!-- Relación al modelo quotation.document -->
+                    <field name="quotation_document_ids" widget="many2many_kanban">
+                        <kanban js_class="quotation_document_kanban">
+                            <field name="sequence" widget="handle"/>
+                            <field name="ir_attachment_id"/>
+                            <field name="mimetype"/>
+                            <field name="document_type"/>
+                            <field name="name"/>
+                            <field name="active"/>
+                            <templates>
+                                <t t-name="menu">
+                                    <a t-if="widget.editable" type="open" class="dropdown-item">Edit</a>
+                                    <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
+                                    <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
+                                </t>
+                                <t t-name="card" class="o_kanban_attachment flex-row">
+                                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                                    <aside>
+                                        <div class="o_image o_kanban_previewer w-100 h-100" t-att-data-mimetype="record.mimetype.value"/>
+                                    </aside>
+                                    <main class="ms-2">
+                                        <field name="name" class="fw-bolder text-truncate"/>
+                                        <div class="d-flex mt-2">
+                                            <span>Document type:</span>
+                                            <field name="document_type" class="ms-2" widget="selection"/>
+                                        </div>
+                                        <div t-if="!!record.quotation_template_ids.raw_value.length" class="mt-2">
+                                            <span class="pe-2">Templates:</span>
+                                            <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
+                                        </div>
+                                    </main>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>
