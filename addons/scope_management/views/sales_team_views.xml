@@ -9,7 +9,7 @@
             </xpath>
 
             <xpath expr="//sheet/notebook" position="inside">
-                <page string="Quote Builder" name="quote_builder_settings">
+                <page string="Sales Team Builder" name="quote_builder_settings">
                     <!-- Relación al modelo quotation.document -->
                     <field name="quotation_document_ids" widget="many2many_kanban">
                         <kanban js_class="quotation_document_kanban">

@@ -1,6 +1,6 @@
 from odoo import models, fields
 
-class CrmTeam(models.Model):
+class SalessTeam(models.Model):
     _inherit = 'crm.team'
 
     x_include_technical_proposal = fields.Boolean(
