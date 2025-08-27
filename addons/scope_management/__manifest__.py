@@ -17,6 +17,7 @@
         'views/scope_management_views.xml',
         'report/paperformat.xml',
         'report/scope_pdf_template.xml',
+        'report/report_scope_proposal.xml',
         'views/scope_management_menus.xml',
     ],
     'installable': True,

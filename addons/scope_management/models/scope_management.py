@@ -9,11 +9,12 @@ class ScopeManagement(models.Model):
     name = fields.Char(string='Service', required=True)
     description = fields.Html(string='Description')
     sales_team = fields.Many2one('crm.team', string='Sales Team')
-    product_id = fields.Many2one('product.product', string='Product')
-
-    product_ids = fields.One2many('product.template', 'scope_id', string='Products')
     active = fields.Boolean(default=True)
 
+    # Relación con el producto (cada scope tiene UN producto)
+    product_id = fields.Many2one('product.product', string='Product')
+
+    # Relación con la orden (cada scope pertenece a UNA orden)
     sale_order_id = fields.Many2one("sale.order", string="Sale Order", ondelete="cascade")
 
     @api.model_create_multi

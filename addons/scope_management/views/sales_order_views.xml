@@ -1,8 +1,8 @@
 <odoo>
-    <record id="view_order_form_inherit_scope_proposal" model="ir.ui.view">
+    <record id="sale_team_form_inherit_sale_pdf_quote_builder" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.scope.proposal</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="inherit_id" ref="sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder"/>
         <field name="arch" type="xml">
 
             <!-- Ubicar pestaña Quote Builder -->
@@ -11,9 +11,11 @@
                     <div class="mb-2">
                         <h3>
                             Propuesta Tecnica de Alcances &gt;
-                            <field name="related_scope_products" readonly="1"/>
+                            <field name="related_scope_products" readonly="1" invisible="not show_related_scope_products"/>
                         </h3>
-                        <button name="action_print_technical_proposal" type="object" string="Alcances" class="btn btn-secondary m-1"/>
+                        <button name="action_print_technical_proposal" type="object" string="Imprimir Alcances" class="btn btn-secondary m-1"/>
+                        <button name="action_attach_technical_proposal" type="object" string="Adjuntar Propuesta Técnica" class="btn btn-primary m-1" invisible="not has_related_scopes"/>
+                        <!-- Solo visible si hay scopes -->
                     </div>
                 </div>
             </xpath>
