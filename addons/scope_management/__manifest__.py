@@ -20,6 +20,11 @@
         'report/report_scope_proposal.xml',
         'views/scope_management_menus.xml',
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'scope_management/static/src/css/report_scope.css',
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',

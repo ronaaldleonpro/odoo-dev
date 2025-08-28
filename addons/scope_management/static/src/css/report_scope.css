@@ -1,0 +1,64 @@
+/* Fuentes personalizadas */
+@font-face {
+  font-family: "Dancing Script";
+  src: url("/scope_management/static/src/fonts/DancingScript-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dancing Script";
+  src: url("/scope_management/static/src/fonts/DancingScript-Medium.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dancing Script";
+  src: url("/scope_management/static/src/fonts/DancingScript-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Dancing Script";
+  src: url("/scope_management/static/src/fonts/DancingScript-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  font-family: "Dancing Script", cursive;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 12px;
+  color: #333;
+}
+
+h2.scopeTitle {
+  font-size: 22px;
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  font-family: "Dancing Script", cursive;
+}
+
+.scope-description {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+div.logo {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+img.logo-img {
+  width: 100%;
+  height: auto;
+}
