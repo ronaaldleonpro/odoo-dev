@@ -18,6 +18,9 @@ class IrActionsReport(models.Model):
 
         orders = self.env['sale.order'].browse(res_ids)
         for order in orders:
+            if not order.team_include_technical_proposal:
+                continue
+
             if order.related_scope_ids:
                 try:
                     # Use action_report_scope_proposal for sale.order

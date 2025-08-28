@@ -25,3 +25,11 @@ class ScopeManagement(models.Model):
                 name = text.strip().replace('*', '').partition("\n")[0]
                 vals['name'] = (name[:97] + '...') if len(name) > 100 else name
         return super().create(vals_list)
+    
+    class ProductProduct(models.Model):
+        _inherit = 'product.product'
+
+        scope_ids = fields.Many2many(
+            'scope.management',
+            string="Scopes relacionados"
+        )

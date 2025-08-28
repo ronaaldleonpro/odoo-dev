@@ -7,15 +7,12 @@
 
             <!-- Ubicar pestaña Quote Builder -->
             <xpath expr="//page[@name='pdf_quote_builder']" position="inside">
-                <div class="mb-4">
+                <div class="mb-4" invisible="not show_related_scope_products">
                     <div class="mb-2">
                         <h3>
-                            Propuesta Tecnica de Alcances &gt;
-                            <field name="related_scope_products" readonly="1" invisible="not show_related_scope_products"/>
+                            Scopes &gt;
+                            <field name="related_scope_products" readonly="1" />
                         </h3>
-                        <button name="action_print_technical_proposal" type="object" string="Imprimir Alcances" class="btn btn-secondary m-1"/>
-                        <button name="action_attach_technical_proposal" type="object" string="Adjuntar Propuesta Técnica" class="btn btn-primary m-1" invisible="not has_related_scopes"/>
-                        <!-- Solo visible si hay scopes -->
                     </div>
                 </div>
             </xpath>
