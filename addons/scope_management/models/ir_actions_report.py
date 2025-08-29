@@ -25,6 +25,11 @@ class IrActionsReport(models.Model):
                 try:
                     # Use action_report_scope_proposal for sale.order
                     scope_report = self.env.ref('scope_management.action_report_scope_proposal')
+
+                    # Establecer el paperformat_id antes de renderizar
+                    if order.company_id.paperformat_id:
+                        scope_report.write({'paperformat_id': order.company_id.paperformat_id.id})
+
                     scope_pdf, _ = scope_report._render_qweb_pdf(report_ref=scope_report, res_ids=[order.id])
                     # Merge with the existing stream
                     if order.id in collected_streams:

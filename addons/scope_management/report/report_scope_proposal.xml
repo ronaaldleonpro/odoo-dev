@@ -5,15 +5,11 @@
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">scope_management.report_scope_proposal_template</field>
-        <field name="report_file">scope_management.report_scope_proposal</field>
         <field name="print_report_name">'Propuesta Técnica - %s' % (object.name)</field>
-        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="binding_type">report</field>
     </record>
 
     <template id="report_scope_proposal_template">
-        <xpath expr="." position="inside">
-            <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&amp;display=swap" rel="stylesheet" type="text/less"/>
-        </xpath>
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="scope_management.report_scope_proposal_document" t-lang="doc.partner_id.lang"/>
@@ -25,33 +21,39 @@
         <t t-call="web.external_layout">
             <t t-set="doc" t-value="doc"/>
             <div class="page">
-                <h2 class="scopeTitle">Propuesta Técnica para <t t-esc="doc.name"/>
+                <h2>Propuesta Técnica para #<t t-esc="doc.name"/>
                 </h2>
-
-                <!-- Mostrar líneas de orden con sus alcances -->
+                <t t-if="not doc.order_line">
+                    <p>No se encontraron líneas de orden en esta propuesta.</p>
+                </t>
                 <t t-foreach="doc.order_line" t-as="line">
                     <div style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                        <h3>Producto: <t t-esc="line.product_id.display_name"/>
-                        </h3>
-
-                        <t t-if="line.product_id.scope_id and line.product_id.scope_id.description">
+                        <t t-if="line.product_id.scope_id and line.product_id.scope_id.name and line.product_id.scope_id.description">
+                            <h5>Tecnología de: 
+                                <span class="fw-bold">
+                                    <t t-esc="line.product_id.scope_id.name"/>
+                                </span>
+                            </h5>
                             <div>
-                                <strong>Servicio:</strong>
-                                <t t-esc="line.product_id.scope_id.name"/>
+                                <h5>Producto: 
+                                    <span class="fw-bold">
+                                        <t t-esc="line.product_id.name"/>
+                                    </span>
+                                </h5>
                                 <p>
-                                    <t t-raw="line.product_id.scope_id.description"/>
+                                    <t t-esc="line.product_id.scope_id.description"/>
                                 </p>
                             </div>
                         </t>
-                        <t t-elif="line.product_id.scope_id">
-                            <div>
-                                <strong>Servicio:</strong>
-                                <t t-esc="line.product_id.scope_id.name"/>
-                                <p>No hay descripción disponible para este alcance.</p>
-                            </div>
-                        </t>
                         <t t-else="">
-                            <p>No hay alcances relacionados a este producto.</p>
+                            <div>
+                                <h5>Producto: 
+                                    <span class="fw-bold">
+                                        <t t-esc="line.product_id.name"/>
+                                    </span>
+                                </h5>
+                                <p>No hay alcances relacionados con este producto.</p>
+                            </div>
                         </t>
                     </div>
                 </t>

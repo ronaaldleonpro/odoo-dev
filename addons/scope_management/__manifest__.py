@@ -15,16 +15,9 @@
         'views/sales_order_views.xml',
         'views/product_template_views.xml',
         'views/scope_management_views.xml',
-        'report/paperformat.xml',
-        'report/scope_pdf_template.xml',
         'report/report_scope_proposal.xml',
         'views/scope_management_menus.xml',
     ],
-    'assets': {
-        'web.report_assets_common': [
-            'scope_management/static/src/css/report_scope.css',
-        ],
-    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
