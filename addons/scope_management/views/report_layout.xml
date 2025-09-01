@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Nuevo template QWeb para el layout personalizado -->
+        <template id="external_layout_custom">
+            <!-- HEADER -->
+            <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+                <svg t-attf-class="o_shape_treming_bubble_header z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="5.92in" height="4.60in" viewBox="0 0 592 460"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="296" cy="230" r="200" fill="#001E41" fill-opacity="1"></circle>
+                </svg>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <img t-if="company.logo" class="o_company_logo_custom mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                    </div>
+                    <div name="company_address" class="w-50 text-end">
+                        <ul class="list-unstyled" name="company_address_list">
+                            <li t-if="company.is_company_details_empty">
+                                <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                    <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-else="">
+                                <span t-field="company.company_details">
+                                    <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                        <strong>Company details block</strong>
+                                        <div>Contains the company details.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-if="not forced_vat"/>
+                            <li t-else="">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="forced_vat">US12345671</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BODY -->
+            <t t-set="layout_background_url" t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''" />
+            <div t-attf-class="article o_report_layout_bubble o_table_boxed-rounded o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}" t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <table class="o_ignore_layout_styling table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td t-call="web.address_layout" class="p-0">
+                                <t t-set="custom_layout_address" t-value="true"/>
+                            </td>
+                            <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                                <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                        <tr t-if="information_block">
+                            <td colspan="2" class="align-bottom p-0">
+                                <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <t t-out="0"/>
+            </div>
+
+            <!-- FOOTER -->
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+                <svg t-attf-class="o_shape_treming_bubble_footer {{report_type == 'pdf' and 'position-fixed o_shape_treming_bubble_footer start-0'}}" width="5.92in" height="4.60in" viewBox="0 0 592 460" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M296,230 m-200,0 a200,200 0 1,1 400,0 a200,200 0 1,1 -400,0" fill="#001E41" fill-opacity="1"/>
+                </svg>
+                <div t-if="company.report_footer" t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
+                    <div t-if="company.report_footer" class="border-top pt-2" t-field="company.report_footer"/>
+                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/>
+ /                    <span class="topage"/>
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Registrar el nuevo layout en el modelo report.layout -->
+    <record id="report_layout_custom" model="report.layout">
+        <field name="name">Treming</field>
+        <field name="sequence">10</field>        <!-- Mayor que los layouts existentes (2-9) -->
+        <field name="view_id" ref="scope_management.external_layout_custom"/>
+    </record>
+
+    <!-- Añadir estilos dinámicos para el nuevo layout -->
+    <template id="styles_custom_layout" inherit_id="web.styles_company_report">
+        <xpath expr="//t[@t-foreach='company_ids']" position="inside">
+            <t t-when="layout == 'scope_management.external_layout_custom'">
+                    .o_company_<t t-esc="company.id"/>
+_layout.o_report_layout_custom {
+                        .header {
+                            background-color: mix(white, <t t-esc="primary"/>
+, 90%);
+                            border-bottom: 3px solid <t t-esc="secondary"/>
+;
+                        }
+                        .article {
+                            background-color: mix(white, <t t-esc="primary"/>
+, 95%);
+                            border-left: 5px solid <t t-esc="secondary"/>
+;
+                        }
+                        .footer {
+                            background-color: mix(white, <t t-esc="secondary"/>
+, 90%);
+                            border-top: 3px solid <t t-esc="primary"/>
+;
+                        }
+                        h2 {
+                            color: <t t-esc="primary"/>
+ !important;
+                        }
+                    }
+</t>
+</xpath>
+</template>
+
+</data>
+</odoo>

@@ -1,0 +1,34 @@
+.o_report_layout_bubble {
+    #informations {
+        margin: 0;
+        border: $border-width * 2 solid;
+        border-radius: $border-radius-lg;
+        padding: map-get($spacers, 2) $table-cell-padding-y;
+
+        // In pdf it overlaps with existing margin, set to 0 to replicate in HTML
+        div:first-child {
+            padding-left: 0;
+        }
+
+        div:last-child {
+            padding-right: 0;
+        }
+    }
+}
+
+.o_shape_treming_bubble_header {
+    top: -240px;
+    right: -240px;
+}
+
+.o_shape_treming_bubble_footer {
+    margin-left: -240px;
+    margin-bottom: -200px;
+}
+
+.o_company_logo_custom {
+    max-height: 6rem;
+    max-width: 9rem;
+    margin-top: 1rem;
+    margin-left: 3rem;
+}

@@ -17,7 +17,13 @@
         'views/scope_management_views.xml',
         'report/report_scope_proposal.xml',
         'views/scope_management_menus.xml',
+        'views/report_layout.xml',
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'scope_management/static/src/scss/layout_*.scss',
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
