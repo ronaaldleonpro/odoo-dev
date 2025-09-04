@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         string="Detected Scopes",
         help="Scopes automatically detected from products in the quotation.",
         compute="_compute_related_scope_ids",
-        store=True
+        store=False
     )
 
     has_related_scopes = fields.Boolean(
