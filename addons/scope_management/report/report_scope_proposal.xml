@@ -28,10 +28,11 @@
                 </t>
                 <t t-foreach="doc.order_line" t-as="line">
                     <div style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                        <t t-if="line.product_id.scope_id and line.product_id.scope_id.name and line.product_id.scope_id.description">
-                            <h5>Tecnología de: 
+                        <t t-set="scope" t-value="doc.related_scope_ids.filtered(lambda s: s.product_id == line.product_id)[:1]"/>
+                        <t t-if="scope">
+                            <h5>Tecnología: 
                                 <span class="fw-bold">
-                                    <t t-esc="line.product_id.scope_id.name"/>
+                                    <t t-esc="scope.name or 'Sin nombre de alcance'"/>
                                 </span>
                             </h5>
                             <div>
@@ -41,7 +42,7 @@
                                     </span>
                                 </h5>
                                 <p>
-                                    <t t-esc="line.product_id.scope_id.description"/>
+                                    <t t-esc="scope.description or 'Sin descripción disponible'" t-options="{'widget': 'html'}"/>
                                 </p>
                             </div>
                         </t>
@@ -52,7 +53,8 @@
                                         <t t-esc="line.product_id.name"/>
                                     </span>
                                 </h5>
-                                <p>No hay alcances relacionados con este producto.</p>
+                                <p>Error: No se encontró un alcance asociado para este producto (<t t-esc="line.product_id.name"/>
+). Verifica la relación en Alcances.</p>
                             </div>
                         </t>
                     </div>
